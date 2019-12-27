@@ -1,0 +1,8 @@
+/node_modules
+/dist
+/.vscode
+/web/**/*.scss.d.ts
+.nodeModulesExistsrc
+tsconfig.lint.json
+/web/**/*.DS_Store
+server/dist

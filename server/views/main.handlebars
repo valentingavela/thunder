@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>{{title}} - V{{appVersion}}</title>
+  <base href="/">
+
+  <link rel="shortcut icon" href="{{ staticContent }}/assets/favicon.ico" type="image/x-icon" />
+  {{!-- TODO: load assets --}}
+  {{!-- {{#each stats.assetsByChunkName.app.css}}
+  <link href="{{ this }}" rel="stylesheet" type="text/css">
+  {{/each}}
+  {{#each stats.assetsByChunkName.vendors.css}}
+  <link href="{{ this }}" rel="stylesheet" type="text/css">
+  {{/each}} --}}
+</head>
+
+<style id="style-initapp">
+  .container-loader {
+    background-color: #EFEFEF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+</style>
+
+<body>
+  <div id="root">
+  </div>
+  <script type="text/javascript" src="{{ stats.assetsByChunkName.app }}"></script>
+  <script type="text/javascript" src="{{ stats.assetsByChunkName.vendors }}"></script>
+</body>
+
+</html>
