@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "module": "esnext",
+    "target": "es5",
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "lib": ["es2015", "es7", "dom", "esnext"],
+    "jsx": "react",
+    "typeRoots": ["./node_modules/@types"],
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": [
+        "web/components/*"
+      ],
+      "@services/*": [
+        "web/services/*"
+      ],
+      "@translations/*": [
+        "web/translations/*"
+      ],
+      "@utils/*": [
+        "web/utils/*"
+      ],
+      "@contextApi/*": [
+        "web/contextApi/*"
+      ],
+      "@models/*": [
+        "web/models/*"
+      ],
+      "@constants/*": [
+        "web/constants/*"
+      ],
+      "@views/*": [
+        "web/views/*"
+      ]
+    }
+  },
+  "exclude": ["node_modules", "dist", "server"]
+}

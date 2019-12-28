@@ -1,0 +1,70 @@
+:global {
+  .text-center {
+    text-align: center;
+  }
+
+  .text-left {
+    text-align: left;
+  }
+
+  .text-right {
+    text-align: right;
+  }
+
+  .center-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .vertical-align {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .flex-end {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .d-flex {
+    display: flex;
+  }
+
+  .width-half {
+    width: 50%;
+  }
+
+  .pointer {
+    cursor: pointer;
+  }
+
+  .display-none {
+    display: none !important;
+  }
+
+  .font-bold {
+    font-weight: bold;
+  }
+
+  .W100 {
+    width: 100%;
+  }
+
+  .italic {
+    font-style: italic;
+  }
+}
+
+body {
+  background-color: white;
+}
+
+p {
+  color: black;
+}
+
+html {
+  scroll-behavior: smooth;
+}
