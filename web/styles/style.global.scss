@@ -58,7 +58,15 @@
 }
 
 body {
-  background-color: white;
+  font-size: 13px;
+  background-color: #fff;
+  border-collapse: collapse;
+  font-family: 'Proxima Nova', -apple-system, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif,
+    sans-serif;
+  table-layout: fixed;
+  margin: 0;
+  padding: 0;
+  width: 100%;
 }
 
 p {
