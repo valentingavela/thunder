@@ -1,11 +1,14 @@
 import { IRequest, IResponse } from '../models/Express';
-import { ISearch, IResult, IFilter, IAvailablefilter, ISearchPayload } from './models';
+import { ISearch, IResult, IFilter, IAvailablefilter, ISearchPayload } from './search.models';
+
+import { AxiosResponse } from 'axios';
+import { ISearchItemResponse, ISearchItemPayload } from './searchItem.models';
 
 const ApiController = {
   searchProducts: (req: IRequest, res: IResponse) => {
     const { url, apiClient, query } = req;
 
-    const searchBaseUrl = '/sites/MLA/search';
+    const searchUrl = '/sites/MLA/search';
 
     const params = {
       q: query['q'],
@@ -13,21 +16,28 @@ const ApiController = {
     };
 
     apiClient
-      .get(searchBaseUrl, { params })
-      .then((mercadoLibreRes: any) => handleSuccessResponse(req, res, mercadoLibreRes))
+      .get(searchUrl, { params })
+      .then((mercadoLibreRes: AxiosResponse<ISearch>) => handleSuccessResponse(req, res, mercadoLibreRes))
       .catch((err: any) => handleErrorResponse(req, res, err));
   },
-  // getItem: (req: IRequest, res: IResponse) => {
-  //   const { apiClient, params } = req;
-  //   const url = `/items${params.id}`;
-  //   apiClient
-  //     .get(url)
-  //     .then(mercadoLibreRes => console.log(mercadoLibreRes))
-  //     .catch(err => console.log(err));
-  // },
+  getItem: (req: IRequest, res: IResponse) => {
+    const { apiClient, params } = req;
+    const url = `/items/${params.id}`;
+
+    apiClient
+      .get(url)
+      .then((mercadoLibreRes: AxiosResponse<ISearchItemResponse>) =>
+        handleGetItemResponse(req, res, mercadoLibreRes),
+      )
+      .catch((err: any) => handleErrorResponse(req, res, err));
+  },
 };
 
-function handleSuccessResponse(req: IRequest, res: IResponse, mercadoLibreRes: any) {
+function handleGetItemResponse(
+  req: IRequest,
+  res: IResponse,
+  mercadoLibreRes: AxiosResponse<ISearchItemResponse>,
+) {
   const { method, url, body, params } = req;
 
   console.info('-----------------------------------------------------------------');
@@ -39,13 +49,60 @@ function handleSuccessResponse(req: IRequest, res: IResponse, mercadoLibreRes: a
   }
 
   console.info('Params: ' + JSON.stringify(params));
-  console.info('Response time: ' + mercadoLibreRes.responseTime + 'ms');
 
-  const payload = transformSearchResponse(mercadoLibreRes.data);
+  const payload = createSearchItemPayload(mercadoLibreRes.data);
   res.send(payload);
 }
 
-function transformSearchResponse(data: ISearch): ISearchPayload {
+function createSearchItemPayload(data: ISearchItemResponse): ISearchItemPayload {
+  const {
+    currency_id,
+    price,
+    condition,
+    shipping: { free_shipping },
+    id,
+    pictures,
+    sold_quantity,
+    title,
+  } = data;
+  const mappedPrice = mapPrice(currency_id, price);
+
+  return {
+    author: {
+      name: 'Valentín',
+      lastname: 'Gavela',
+    },
+    item: {
+      condition,
+      free_shipping,
+      id,
+      sold_quantity,
+      title,
+      description: null,
+      picture: pictures[0].url,
+      price: mappedPrice,
+    },
+  };
+}
+
+function handleSuccessResponse(req: IRequest, res: IResponse, mercadoLibreRes: AxiosResponse<ISearch>) {
+  const { method, url, body, params } = req;
+
+  console.info('-----------------------------------------------------------------');
+  console.info(method + ' - ' + url);
+  console.info('Status: ' + mercadoLibreRes.status + ' ' + mercadoLibreRes.statusText);
+
+  if (method.toLowerCase() === 'post') {
+    console.info('Request body: ' + JSON.stringify(body));
+  }
+
+  console.info('Params: ' + JSON.stringify(params));
+
+  const payload = createSearchItemsPayload(mercadoLibreRes.data);
+  res.send(payload);
+}
+
+function createSearchItemsPayload(data: ISearch): ISearchPayload {
   const { available_filters, filters, results } = data;
   const itemsFound = data.results.length > 0;
 
@@ -77,12 +134,7 @@ function getCategories(params: { availableFilters: IAvailablefilter[]; filters: 
 function getItems(results: IResult[]) {
   return results.map(result => {
     const { id, title, price, thumbnail, condition, shipping, currency_id } = result;
-    const [amount, decimals] = String(price).split('.');
-    const mappedPrice = {
-      currency: currency_id,
-      amount: Number(amount),
-      decimals: decimals ? Number(decimals) : 0,
-    };
+    const mappedPrice = mapPrice(currency_id, price);
 
     return {
       id,
@@ -93,6 +145,16 @@ function getItems(results: IResult[]) {
       free_shipping: shipping.free_shipping,
     };
   });
+}
+
+function mapPrice(currency: string, rawAmount: number) {
+  const [amount, decimals] = String(rawAmount).split('.');
+
+  return {
+    currency,
+    amount: Number(amount),
+    decimals: decimals ? Number(decimals) : 0,
+  };
 }
 
 function handleErrorResponse(req: IRequest, res: IResponse, err: any) {

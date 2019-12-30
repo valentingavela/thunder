@@ -155,10 +155,7 @@ interface IPaging {
 }
 
 export interface ISearchPayload {
-  author: {
-    name: string;
-    lastname: string;
-  };
+  author: IAuthor;
   categories: string[];
   items: Array<{
     id: string;
@@ -172,4 +169,9 @@ export interface ISearchPayload {
     condition: string;
     free_shipping: boolean;
   }>;
+}
+
+export interface IAuthor {
+  name: string;
+  lastname: string;
 }
