@@ -5,7 +5,7 @@ module.exports = {
   },
   api: {
     port: 9290,
-    base: '/thunder/api',
+    base: '/api',
     mercadoLibre: {
       url: '/mercadolibre',
     },
