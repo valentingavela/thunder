@@ -24,7 +24,12 @@ class SearchBox extends PureComponent<Props, State> {
   render() {
     return (
       <form className={styles.form}>
-        <input className={styles.input} onChange={this.handleInputChange} />
+        <input
+          className={styles.input}
+          onChange={this.handleInputChange}
+          // TODO add translation in place of hardcoded text
+          placeholder="Nunca dejes de buscar"
+        />
         <button className={styles.button} onClick={this.handleButtonClick}>
           <i className={styles.icoMglass} />
         </button>
