@@ -26,7 +26,7 @@ export interface ISearchItemResponse {
   secure_thumbnail: string;
   pictures: IPicture[];
   video_id: string;
-  descriptions: IDescription[];
+  descriptions: IDescriptionIds[];
   accepts_mercadopago: boolean;
   non_mercado_pago_payment_methods: any[];
   shipping: IShipping;
@@ -138,7 +138,7 @@ interface IShipping {
   store_pick_up: boolean;
 }
 
-interface IDescription {
+interface IDescriptionIds {
   id: string;
 }
 
@@ -187,4 +187,19 @@ export interface ISearchItemPayload {
     sold_quantity: number;
     description: string;
   };
+}
+
+export interface IGetDescriptionResponse {
+  id: string;
+  created: Date;
+  text: string;
+  plain_text: string;
+  snapshot: ISnapshot;
+}
+
+export interface ISnapshot {
+  url: string;
+  width: number;
+  height: number;
+  status: string;
 }
