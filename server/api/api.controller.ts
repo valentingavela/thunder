@@ -2,7 +2,7 @@ import { IRequest, IResponse } from '../models/Express';
 import { ISearch, IResult, IFilter, IAvailablefilter, ISearchPayload } from './search.models';
 
 import { AxiosResponse } from 'axios';
-import { ISearchItemResponse, ISearchItemPayload } from './searchItem.models';
+import { ISearchItemResponse, ISearchItemPayload, IGetDescriptionResponse } from './searchItem.models';
 
 const ApiController = {
   searchProducts: (req: IRequest, res: IResponse) => {
@@ -17,7 +17,7 @@ const ApiController = {
 
     apiClient
       .get(searchUrl, { params })
-      .then((mercadoLibreRes: AxiosResponse<ISearch>) => handleSuccessResponse(req, res, mercadoLibreRes))
+      .then((mercadoLibreRes: AxiosResponse<ISearch>) => handleSearchResponse(req, res, mercadoLibreRes))
       .catch((err: any) => handleErrorResponse(req, res, err));
   },
   getItem: (req: IRequest, res: IResponse) => {
@@ -33,7 +33,7 @@ const ApiController = {
   },
 };
 
-function handleGetItemResponse(
+async function handleGetItemResponse(
   req: IRequest,
   res: IResponse,
   mercadoLibreRes: AxiosResponse<ISearchItemResponse>,
@@ -50,11 +50,23 @@ function handleGetItemResponse(
 
   console.info('Params: ' + JSON.stringify(params));
 
-  const payload = createSearchItemPayload(mercadoLibreRes.data);
+  const descriptions = await getDescriptions(req);
+
+  const payload = createSearchItemPayload(mercadoLibreRes.data, descriptions.data);
   res.send(payload);
 }
 
-function createSearchItemPayload(data: ISearchItemResponse): ISearchItemPayload {
+async function getDescriptions(req: IRequest) {
+  const { apiClient, params } = req;
+  const url = `/items/${params.id}/descriptions`;
+
+  return (await apiClient.get(url)) as AxiosResponse<IGetDescriptionResponse[]>;
+}
+
+function createSearchItemPayload(
+  data: ISearchItemResponse,
+  description: IGetDescriptionResponse[],
+): ISearchItemPayload {
   const {
     currency_id,
     price,
@@ -78,14 +90,14 @@ function createSearchItemPayload(data: ISearchItemResponse): ISearchItemPayload 
       id,
       sold_quantity,
       title,
-      description: null,
+      description: description[0].plain_text,
       picture: pictures[0].url,
       price: mappedPrice,
     },
   };
 }
 
-function handleSuccessResponse(req: IRequest, res: IResponse, mercadoLibreRes: AxiosResponse<ISearch>) {
+function handleSearchResponse(req: IRequest, res: IResponse, mercadoLibreRes: AxiosResponse<ISearch>) {
   const { method, url, body, params } = req;
 
   console.info('-----------------------------------------------------------------');
@@ -98,15 +110,16 @@ function handleSuccessResponse(req: IRequest, res: IResponse, mercadoLibreRes: A
 
   console.info('Params: ' + JSON.stringify(params));
 
-  const payload = createSearchItemsPayload(mercadoLibreRes.data);
+  const payload = createSearchPayload(mercadoLibreRes.data);
   res.send(payload);
 }
 
-function createSearchItemsPayload(data: ISearch): ISearchPayload {
+function createSearchPayload(data: ISearch): ISearchPayload {
   const { available_filters, filters, results } = data;
   const itemsFound = data.results.length > 0;
 
   const payload = {
+    // TODO refactor author because is repeated
     author: {
       name: 'Valentín',
       lastname: 'Gavela',
@@ -161,15 +174,10 @@ function handleErrorResponse(req: IRequest, res: IResponse, err: any) {
   const { method, body, params, url } = req;
   const response = {} as any;
 
-  switch (err && err.code) {
-    case 'ENOTFOUND':
-      response.code = 502;
-      response.message = 'server not reached';
-      break;
-
-    case 'ECONNABORTED':
-      response.code = 504;
-      response.message = 'timeout';
+  switch (err && err.response.status) {
+    case 404:
+      response.code = err.response.status;
+      response.message = 'Item Not Found';
       break;
 
     default:
@@ -180,7 +188,7 @@ function handleErrorResponse(req: IRequest, res: IResponse, err: any) {
 
   console.error('-----------------------------------------------------------------');
   console.error(method + ' - ' + url);
-  console.error('Status: ' + response.code + ' ' + response.message);
+  console.error('Status: ' + err.response.status + ' ' + err.response.data.message);
 
   if (method.toLowerCase() === 'post') {
     console.error('Request body: ' + JSON.stringify(body));
@@ -188,7 +196,7 @@ function handleErrorResponse(req: IRequest, res: IResponse, err: any) {
 
   console.error('Params: ' + JSON.stringify(params));
   console.error('error: ' + err);
-  console.error('stackTrace error: ' + JSON.stringify(response.stackTrace));
+  console.error('stackTrace error: ' + JSON.stringify(err.stack));
 
   res.status(response.code).send(response);
 }
