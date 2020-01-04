@@ -12,7 +12,7 @@ class App extends PureComponent<Props> {
 
   @bind
   handleSearch(payload: string) {
-    this.props.history.push(`/items/${payload}`);
+    this.props.history.push(`/items?q=${payload}`);
   }
 
   render() {
