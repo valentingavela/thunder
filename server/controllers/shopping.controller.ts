@@ -11,6 +11,19 @@ const ShoppingController = {
 
     const statsPath = path.resolve(PROJECT_PATH, './dist/stats.json');
     const stats = require(statsPath);
+    res.render('main', { stats, title: 'my title', baseurl: url, username });
+  },
+  items: async (req: IRequest, res: IResponse) => {
+    const { url, username, query } = req;
+
+    if (query.hasOwnProperty('q') === false) {
+      res.redirect('/404');
+
+      return;
+    }
+
+    const statsPath = path.resolve(PROJECT_PATH, './dist/stats.json');
+    const stats = require(statsPath);
 
     res.render('main', { stats, title: 'my title', baseurl: url, username });
   },
