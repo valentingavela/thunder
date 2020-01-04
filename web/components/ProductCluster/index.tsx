@@ -1,31 +1,17 @@
 import React, { PureComponent } from 'react';
 import { IProduct } from '@models/shopping';
 import styles from './style.scss';
-import { bind } from 'decko';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
+import ProductPrice from '@components/ProductPrice';
 
 class ProductCluster extends PureComponent<Props> {
-  priceSymbol: string;
   shipping: string;
 
   constructor(props: Props) {
     super(props);
 
-    const { free_shipping, price } = props.product;
-    this.priceSymbol = price.currency === 'USD' ? 'U$S' : '$';
+    const { free_shipping } = props.product;
     this.shipping = free_shipping && 'Envío gratis';
-  }
-
-  @bind
-  price({ price }: { price: { currency: string; amount: number; decimals: number } }) {
-    const { amount, decimals } = price;
-    return (
-      <div className="d-flex">
-        <span className={styles.priceSymbol}>{this.priceSymbol}</span>
-        <span>{amount}</span>
-        {decimals > 0 && <span className={styles.decimals}>{decimals}</span>}
-      </div>
-    );
   }
 
   handleItemClick(productId: string) {
@@ -34,7 +20,6 @@ class ProductCluster extends PureComponent<Props> {
 
   render() {
     const { id, picture, price, title } = this.props.product;
-    const PriceContent = this.price;
     const productUrl = `${this.props.location.pathname}/${id}`;
 
     return (
@@ -46,7 +31,7 @@ class ProductCluster extends PureComponent<Props> {
         </a>
         <div className={styles.productStack}>
           <div className={styles.priceContainer}>
-            <PriceContent price={price} />
+            <ProductPrice price={price} />
             {this.shipping && <span className={styles.shipping}>{this.shipping}</span>}
           </div>
           <h2 className={styles.productTitle}>
