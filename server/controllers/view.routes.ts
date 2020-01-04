@@ -6,7 +6,7 @@ import modelUtil = require('../utils/model.util');
 const router = express.Router();
 
 // ------- SHOPPING ROUTES -------
-router.get('/shopping/home', ShoppingController.home);
+router.get('/', ShoppingController.home);
 
 // ------- CROSS ROUTES -------
 router.get('/*/invalidStatus', CrossController.invalid);

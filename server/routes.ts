@@ -12,7 +12,7 @@ const PROJECT_PATH = config.get<string>('PROJECT_PATH');
 
 const App = (app: expressCore.Application) => {
   staticRouter.use('/', express.static(path.join(PROJECT_PATH, './dist')));
-  apiRouter.use(config.get('api.mercadoLibre.url'), require('./api/api.routes'));
+  apiRouter.use(require('./api/api.routes'));
 
   apiRouter.use((req, res) => {
     res.sendStatus(404);

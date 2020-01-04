@@ -4,6 +4,7 @@ import SetApiMiddleware = require('../middlewares/setApiClient.middleware');
 
 const apiRouter = express.Router();
 
-apiRouter.get('*', SetApiMiddleware, ApiController.get);
+apiRouter.get('/items/:id', SetApiMiddleware, ApiController.getItem);
+apiRouter.get('/items', SetApiMiddleware, ApiController.searchProducts);
 
 export = apiRouter;

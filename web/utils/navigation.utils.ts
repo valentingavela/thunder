@@ -18,10 +18,10 @@ const getURLParams = (pathname: string) => {
   const result = matchPath(pathname, {
     exact: false,
     strict: false,
-    path: '/:type/:id?/',
+    path: '/:item/:productId/',
   });
 
-  return result && result.params;
+  return result && (result.params as { type: string; productId: string });
 };
 
 interface IRedirectOptions {

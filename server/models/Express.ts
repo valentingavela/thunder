@@ -1,7 +1,8 @@
 import expressCore = require('express-serve-static-core');
+import { AxiosInstance } from 'axios';
 
 export interface IRequest extends expressCore.Request {
-  apiClient: any;
+  apiClient: AxiosInstance;
   username: string;
 }
 

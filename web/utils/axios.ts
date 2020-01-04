@@ -62,7 +62,7 @@ export default class AxiosWrapper {
   };
 
   private getConfig({ useCache }: AxiosOptions): AxiosRequestConfig {
-    const baseURL = 'todosetbaseURL';
+    const baseURL = '/api';
 
     return {
       baseURL,
