@@ -24,4 +24,6 @@ export interface IProduct {
   picture: string;
   condition: string;
   free_shipping: boolean;
+  description?: string;
+  sold_quantity: number;
 }

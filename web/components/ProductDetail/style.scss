@@ -1,0 +1,66 @@
+.container {
+  background-color: #fff;
+  width: 900px;
+}
+
+.condition {
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 14px;
+  font-weight: 400;
+  vertical-align: 3px;
+  white-space: pre-wrap;
+}
+
+.img {
+  margin: 24px 0 0;
+  max-width: 410px;
+  padding: 16px;
+}
+
+.title {
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 22px;
+  font-weight: 600;
+  padding-bottom: 8px;
+  line-height: 1.18;
+  padding-right: 10px;
+}
+
+.price {
+  font-weight: 300;
+  font-size: 36px;
+  letter-spacing: normal;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.button {
+  color: #fff;
+  font-family: Proxima Nova, -apple-system, Helvetica Neue, Helvetica, Roboto, Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1;
+  padding: 14px 32px;
+  text-align: center;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-transition: 0.18s ease-out;
+  -o-transition: 0.18s ease-out;
+  transition: 0.18s ease-out;
+  -webkit-transition-property: background, color;
+  -o-transition-property: background, color;
+  transition-property: background, color;
+  -webkit-font-smoothing: antialiased;
+  border-color: #3483fa;
+  background-color: #3483fa;
+  border: 0.05556em solid;
+  cursor: pointer;
+  box-shadow: 0 0 0 0 #fff;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.description-text {
+  font-weight: 400;
+  font-size: 16px;
+}
