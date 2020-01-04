@@ -10,7 +10,7 @@ export default [
     component: HomeView,
   },
   {
-    path: '/items/:itemId',
+    path: '/items',
     component: ItemsView,
   },
 ] as RouteProps[];
