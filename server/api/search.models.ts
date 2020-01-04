@@ -157,18 +157,20 @@ interface IPaging {
 export interface ISearchPayload {
   author: IAuthor;
   categories: string[];
-  items: Array<{
-    id: string;
-    title: string;
-    price: {
-      currency: string;
-      amount: number;
-      decimals: number;
-    };
-    picture: string;
-    condition: string;
-    free_shipping: boolean;
-  }>;
+  items: IProduct[];
+}
+
+export interface IProduct {
+  id: string;
+  title: string;
+  price: {
+    currency: string;
+    amount: number;
+    decimals: number;
+  };
+  picture: string;
+  condition: string;
+  free_shipping: boolean;
 }
 
 export interface IAuthor {
