@@ -35,10 +35,11 @@ class ProductCluster extends PureComponent<Props> {
   render() {
     const { id, picture, price, title } = this.props.product;
     const PriceContent = this.price;
+    const productUrl = `${this.props.location.pathname}/${id}`;
 
     return (
       <div className={styles.clusterContainer}>
-        <a onClick={_e => this.handleItemClick(id)}>
+        <a href={productUrl}>
           <div className={styles.imageContainer}>
             <img src={picture} className={styles.img} />
           </div>
@@ -49,7 +50,7 @@ class ProductCluster extends PureComponent<Props> {
             {this.shipping && <span className={styles.shipping}>{this.shipping}</span>}
           </div>
           <h2 className={styles.productTitle}>
-            <a onClick={_e => this.handleItemClick(id)}>
+            <a href={productUrl}>
               <span>{title}</span>
             </a>
           </h2>
