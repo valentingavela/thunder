@@ -1,11 +1,16 @@
 import { lazy } from 'react';
 import { RouteProps } from 'react-router';
 
-const SearchView = lazy(() => import('@views/SearchView/index'));
+const HomeView = lazy(() => import('@views/HomeView/index'));
+const ItemsView = lazy(() => import('@views/ItemsView/index'));
 
 export default [
   {
-    path: '**/',
-    component: SearchView,
+    path: '/',
+    component: HomeView,
+  },
+  {
+    path: '/items',
+    component: ItemsView,
   },
 ] as RouteProps[];

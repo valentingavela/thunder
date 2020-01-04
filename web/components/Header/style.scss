@@ -1,7 +1,9 @@
+@import '../../styles/styles.constants.scss';
+
 .header {
   height: 50px;
   width: 100%;
-  background-color: #fff159;
+  background-color: $yellow;
   align-items: center;
   justify-content: center;
 }

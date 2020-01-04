@@ -15,7 +15,7 @@ class SearchBox extends PureComponent<Props, State> {
   }
 
   @bind
-  handleButtonClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const payload = this.state.searchBoxInput;
     this.props.onSearchButtonClick(payload);
@@ -23,14 +23,14 @@ class SearchBox extends PureComponent<Props, State> {
 
   render() {
     return (
-      <form className={styles.form}>
+      <form className={styles.form} onSubmit={this.handleSubmit}>
         <input
           className={styles.input}
           onChange={this.handleInputChange}
           // TODO add translation in place of hardcoded text
           placeholder="Nunca dejes de buscar"
         />
-        <button className={styles.button} onClick={this.handleButtonClick}>
+        <button className={styles.button}>
           <i className={styles.icoMglass} />
         </button>
       </form>

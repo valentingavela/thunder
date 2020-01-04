@@ -23,16 +23,11 @@ const Spinner: React.SFC<SpinnerProps> = props => {
   return (
     <div className={classNames(!noFullscreen && styles.fullscreen, styles[direction])}>
       <div className={classNames('loader', sizeClass, className)}>
-        <div className="loader-container">
-          <div className="spinner-dot" />
-          <div className="loader-spinner">
-            <div className="spinner-container spinner-left">
-              <div className="spinner-circle" />
-            </div>
-            <div className="spinner-container spinner-right">
-              <div className="spinner-circle" />
-            </div>
-          </div>
+        <div className={styles.ldsRing}>
+          <div />
+          <div />
+          <div />
+          <div />
         </div>
       </div>
     </div>
