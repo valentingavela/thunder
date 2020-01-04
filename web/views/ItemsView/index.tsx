@@ -2,12 +2,12 @@ import React, { PureComponent } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { bind } from 'decko';
 import SearchServices from '@services/search.services';
-import { getURLParams } from '@utils/navigation.utils';
 import { IProduct } from '@models/shopping';
 import ProductCluster from '@components/ProductCluster';
 import Spinner from '@components/Spinner';
 import styles from './style.scss';
 import classNames from 'classnames';
+import { parse } from 'query-string';
 
 class ItemsView extends PureComponent<Props, State> {
   constructor(props: Props) {
@@ -16,12 +16,17 @@ class ItemsView extends PureComponent<Props, State> {
   }
 
   componentDidMount() {
-    const { productId } = getURLParams(this.props.location.pathname);
-    this.searchProducts(productId);
+    const { q } = parse(this.props.location.search);
+    this.searchProducts(q as string);
 
+    this.searchOnUrlChange();
+  }
+
+  @bind
+  searchOnUrlChange() {
     this.props.history.listen(location => {
-      const { productId: id } = getURLParams(location.pathname);
-      this.searchProducts(id);
+      const { q } = parse(location.search);
+      this.searchProducts(q as string);
     });
   }
 
