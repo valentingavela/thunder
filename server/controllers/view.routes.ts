@@ -7,6 +7,7 @@ const router = express.Router();
 
 // ------- SHOPPING ROUTES -------
 router.get('/', ShoppingController.home);
+router.get('/items/:q', ShoppingController.home);
 
 // ------- CROSS ROUTES -------
 router.get('/*/invalidStatus', CrossController.invalid);
