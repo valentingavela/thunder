@@ -46,8 +46,8 @@ class ItemsView extends PureComponent<Props, State> {
         ) : (
           <div>
             {this.state.products.map((product, i) => (
-              <div className="mb-1">
-                <ProductCluster key={i} product={product} />
+              <div key={i} className="mb-1">
+                <ProductCluster product={product} />
               </div>
             ))}
           </div>
