@@ -18,7 +18,9 @@ class App extends PureComponent<Props> {
   render() {
     return (
       <ErrorBoundary>
-        <Header onSearch={this.handleSearch} />
+        <div className="mb-3">
+          <Header onSearch={this.handleSearch} />
+        </div>
         <Routes />
       </ErrorBoundary>
     );
