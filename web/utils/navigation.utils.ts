@@ -1,4 +1,3 @@
-import { __APP_BASENAME__ } from '@constants/global';
 import { matchPath } from 'react-router-dom';
 
 const getNavigationPath = (destination: 'SHOPPING' | '404') => {
@@ -8,7 +7,7 @@ const getNavigationPath = (destination: 'SHOPPING' | '404') => {
 };
 
 const navigateToError = (error: '500' | '404') =>
-  window.location.replace(`${window.location.origin}${__APP_BASENAME__}/${error}`);
+  window.location.replace(`${window.location.origin}/${error}`);
 
 const navigateToURL = (URL: string, { newTab } = {} as IRedirectOptions) => {
   newTab ? window.open(URL, '_blank') : window.location.replace(URL);
