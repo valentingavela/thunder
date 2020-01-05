@@ -1,7 +1,7 @@
 module.exports = {
   PROJECT_PATH: process.cwd(),
   app: {
-    base: '/thunder',
+    base: '/',
   },
   api: {
     port: 9290,
