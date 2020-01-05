@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { IProduct } from '@models/shopping';
 import styles from './style.scss';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 import ProductPrice from '@components/ProductPrice';
 
 class ProductCluster extends PureComponent<Props> {
@@ -24,20 +24,20 @@ class ProductCluster extends PureComponent<Props> {
 
     return (
       <div className={styles.clusterContainer}>
-        <a href={productUrl}>
+        <Link to={productUrl}>
           <div className={styles.imageContainer}>
             <img src={picture} className={styles.img} />
           </div>
-        </a>
+        </Link>
         <div className={styles.productStack}>
           <div className={styles.priceContainer}>
             <ProductPrice price={price} />
             {this.shipping && <span className={styles.shipping}>{this.shipping}</span>}
           </div>
           <h2 className={styles.productTitle}>
-            <a href={productUrl}>
+            <Link to={productUrl}>
               <span>{title}</span>
-            </a>
+            </Link>
           </h2>
         </div>
       </div>
