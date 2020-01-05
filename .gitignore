@@ -6,3 +6,4 @@
 tsconfig.lint.json
 /web/**/*.DS_Store
 server/dist
+words
