@@ -1,11 +1,11 @@
-import AxiosWrapper from '@utils/axios';
-import { ISearchResponse } from '@models/shopping';
+import AxiosWrapper from '../utils/axios';
+import { ISearchResponse, ISearchItemResponse } from '@models/shopping';
 
 class SearchServices {
   private axios: AxiosWrapper;
 
   constructor() {
-    this.axios = new AxiosWrapper();
+    this.axios = new AxiosWrapper({ use500Interceptor: true });
   }
 
   getProducts(productName: string) {
@@ -15,6 +15,10 @@ class SearchServices {
     };
 
     return this.axios.get<Promise<ISearchResponse>>(`/items`, { params });
+  }
+
+  getProductDetail(productId: string) {
+    return this.axios.get<Promise<ISearchItemResponse>>(`/items/${productId}`);
   }
 }
 
