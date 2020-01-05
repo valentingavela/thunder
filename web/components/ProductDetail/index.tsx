@@ -23,7 +23,7 @@ class ProductDetail extends PureComponent<Props> {
   render() {
     const { picture, price, title, description } = this.props.product;
     return (
-      <div className={classNames(styles.container, 'pt-3')}>
+      <div className={classNames(styles.container, 'pt-3 pr-3 mb-3')}>
         <div className="d-flex">
           <img className={styles.img} src={picture} />
           <div>
