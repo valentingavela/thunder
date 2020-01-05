@@ -8,6 +8,7 @@ import Spinner from '@components/Spinner';
 import styles from './style.scss';
 import classNames from 'classnames';
 import { parse } from 'query-string';
+import ProductNotFound from '@components/ProductNotFound';
 
 class ItemsView extends PureComponent<Props, State> {
   constructor(props: Props) {
@@ -33,23 +34,29 @@ class ItemsView extends PureComponent<Props, State> {
   @bind
   searchProducts(productId: string) {
     this.setState({ loading: true });
-    SearchServices.getProducts(productId).then(response =>
-      this.setState({ products: response.items, loading: false }),
-    );
+    SearchServices.getProducts(productId).then(response => {
+      const resultsFound = !!response.items && response.items.length > 0;
+      this.setState({ products: resultsFound ? response.items : [], loading: false });
+    });
   }
 
   render() {
+    const { loading, products } = this.state;
     return (
       <div className={classNames('d-flex', styles.itemsContainer)}>
-        {this.state.loading ? (
+        {loading ? (
           <Spinner size={'large'} />
         ) : (
           <div>
-            {this.state.products.map((product, i) => (
-              <div key={i} className="mb-1">
-                <ProductCluster product={product} />
-              </div>
-            ))}
+            {products.length === 0 ? (
+              <ProductNotFound />
+            ) : (
+              products.map((product, i) => (
+                <div key={i} className="mb-1">
+                  <ProductCluster product={product} />
+                </div>
+              ))
+            )}
           </div>
         )}
       </div>
