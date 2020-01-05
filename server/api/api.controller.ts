@@ -124,8 +124,8 @@ function createSearchPayload(data: ISearch): ISearchPayload {
       name: 'Valentín',
       lastname: 'Gavela',
     },
-    categories: itemsFound ? getCategories({ filters, availableFilters: available_filters }) : null,
-    items: itemsFound ? getItems(results) : null,
+    categories: itemsFound ? getCategories({ filters, availableFilters: available_filters }) : [],
+    items: itemsFound ? getItems(results) : [],
   };
 
   return payload;
