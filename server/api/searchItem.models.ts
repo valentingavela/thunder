@@ -1,4 +1,5 @@
 import { IAuthor } from './search.models';
+import { IPathFromRoot } from './category.models';
 
 export interface ISearchItemResponse {
   id: string;
@@ -172,10 +173,11 @@ interface IValuestruct {
 }
 
 export interface ISearchItemPayload {
-  author: IAuthor;
+  author?: IAuthor;
   item: {
     id: string;
     title: string;
+    categories: IPathFromRoot[];
     price: {
       currency: string;
       amount: number;
