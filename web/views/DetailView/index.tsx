@@ -8,6 +8,7 @@ import styles from './style.scss';
 import classNames from 'classnames';
 import { getURLParams } from '@utils/navigation.utils';
 import ProductDetail from '@components/ProductDetail';
+import BreadCrumb from '@components/BreadCrumb';
 
 class DetailsView extends PureComponent<Props, State> {
   constructor(props: Props) {
@@ -34,7 +35,12 @@ class DetailsView extends PureComponent<Props, State> {
         {this.state.loading ? (
           <Spinner size={'large'} />
         ) : (
-          <div>{this.state.product && <ProductDetail product={this.state.product} />}</div>
+          <div>
+            <div className="pb-3">
+              <BreadCrumb categories={this.state.product.categories} />
+            </div>
+            <div>{this.state.product && <ProductDetail product={this.state.product} />}</div>
+          </div>
         )}
       </div>
     );
