@@ -1,8 +1,10 @@
 import { IRequest, IResponse } from '../models/Express';
-import { ISearch, IResult, IFilter, IAvailablefilter, ISearchPayload } from './search.models';
+import { ISearch, IResult, ISearchPayload, IAuthor } from './search.models';
 
-import { AxiosResponse } from 'axios';
+import { AxiosResponse, AxiosInstance } from 'axios';
 import { ISearchItemResponse, ISearchItemPayload, IGetDescriptionResponse } from './searchItem.models';
+import { ICategoryResponse, IPathFromRoot } from './category.models';
+import { get2DArrayColumn, getMostRepeatedElement } from '../utils/functions';
 
 const ApiController = {
   searchProducts: (req: IRequest, res: IResponse) => {
@@ -38,7 +40,7 @@ async function handleGetItemResponse(
   res: IResponse,
   mercadoLibreRes: AxiosResponse<ISearchItemResponse>,
 ) {
-  const { method, url, body, params } = req;
+  const { method, url, body, params, apiClient } = req;
 
   console.info('-----------------------------------------------------------------');
   console.info(method + ' - ' + url);
@@ -50,15 +52,15 @@ async function handleGetItemResponse(
 
   console.info('Params: ' + JSON.stringify(params));
 
-  const descriptions = await getDescriptions(req);
+  const descriptions = await getDescriptions(apiClient, params.id);
+  const categories = await getCategoryPathFromRoot(apiClient, mercadoLibreRes.data.category_id);
 
-  const payload = createSearchItemPayload(mercadoLibreRes.data, descriptions.data);
+  const payload = createSearchItemPayload(mercadoLibreRes.data, descriptions.data, categories);
   res.send(payload);
 }
 
-async function getDescriptions(req: IRequest) {
-  const { apiClient, params } = req;
-  const url = `/items/${params.id}/descriptions`;
+async function getDescriptions(apiClient: AxiosInstance, descriptionId: string) {
+  const url = `/items/${descriptionId}/descriptions`;
 
   return (await apiClient.get(url)) as AxiosResponse<IGetDescriptionResponse[]>;
 }
@@ -66,6 +68,7 @@ async function getDescriptions(req: IRequest) {
 function createSearchItemPayload(
   data: ISearchItemResponse,
   description: IGetDescriptionResponse[],
+  categories: IPathFromRoot[],
 ): ISearchItemPayload {
   const {
     currency_id,
@@ -80,11 +83,9 @@ function createSearchItemPayload(
   const mappedPrice = mapPrice(currency_id, price);
 
   return {
-    author: {
-      name: 'Valentín',
-      lastname: 'Gavela',
-    },
+    author,
     item: {
+      categories,
       condition,
       free_shipping,
       id,
@@ -97,8 +98,14 @@ function createSearchItemPayload(
   };
 }
 
-function handleSearchResponse(req: IRequest, res: IResponse, mercadoLibreRes: AxiosResponse<ISearch>) {
-  const { method, url, body, params } = req;
+async function getCategoryPathFromRoot(apiClient: AxiosInstance, categoryId: string) {
+  const categoryPath = await getCategory(apiClient, categoryId);
+
+  return categoryPath.data.path_from_root;
+}
+
+async function handleSearchResponse(req: IRequest, res: IResponse, mercadoLibreRes: AxiosResponse<ISearch>) {
+  const { method, url, body, params, apiClient } = req;
 
   console.info('-----------------------------------------------------------------');
   console.info(method + ' - ' + url);
@@ -109,42 +116,60 @@ function handleSearchResponse(req: IRequest, res: IResponse, mercadoLibreRes: Ax
   }
 
   console.info('Params: ' + JSON.stringify(params));
-
-  const payload = createSearchPayload(mercadoLibreRes.data);
+  const payload = await createSearchPayload(apiClient, mercadoLibreRes.data);
   res.send(payload);
 }
 
-function createSearchPayload(data: ISearch): ISearchPayload {
-  const { available_filters, filters, results } = data;
-  const itemsFound = data.results.length > 0;
+async function createSearchPayload(apiClient: AxiosInstance, data: ISearch) {
+  const { results } = data;
+  const itemsFound = results.length > 0;
+
+  const categories = itemsFound ? await mapCategories(apiClient, results) : [];
 
   const payload = {
-    // TODO refactor author because is repeated
-    author: {
-      name: 'Valentín',
-      lastname: 'Gavela',
-    },
-    categories: itemsFound ? getCategories({ filters, availableFilters: available_filters }) : null,
-    items: itemsFound ? getItems(results) : null,
+    author,
+    categories,
+    items: itemsFound ? mapItems(results) : [],
   };
 
   return payload;
 }
 
-function getCategories(params: { availableFilters: IAvailablefilter[]; filters: IFilter[] }): string[] {
-  const categoriesByAvailableFilter = params.availableFilters.filter(filter => filter.id === 'category');
-  const haveCategoryFilter = categoriesByAvailableFilter.length > 0;
+async function mapCategories(apiClient: AxiosInstance, results: IResult[]) {
+  const categoriesPromise = results.map(async result => {
+    const { category_id } = result;
+    const { data } = await getCategory(apiClient, category_id);
 
-  if (haveCategoryFilter) {
-    return categoriesByAvailableFilter[0].values
-      .sort((a, b) => a.results - b.results)
-      .map(filter => filter.name);
-  } else {
-    return params.filters.filter(filter => filter.id === 'category')[0].values.map(filter => filter.name);
-  }
+    return data;
+  });
+
+  const categories = await Promise.all(categoriesPromise);
+
+  return generateCategoryBreadcrumb(categories);
 }
 
-function getItems(results: IResult[]) {
+function generateCategoryBreadcrumb(categories: ICategoryResponse[]) {
+  const categoriesPaths = categories.map(category => category.path_from_root);
+
+  const smallestArrayLength = Math.min(...categoriesPaths.map(arr => arr.length));
+
+  return Array.from({ length: smallestArrayLength }).reduce((acc, _val, i) => {
+    const currentColumn = get2DArrayColumn(categoriesPaths, i);
+    const { item, times } = getMostRepeatedElement(currentColumn, 'name');
+    // @ts-ignore
+    if (times > 1) acc = [...acc, item];
+
+    return acc;
+  }, []);
+}
+
+async function getCategory(apiClient: AxiosInstance, categoryId: string) {
+  const url = `/categories/${categoryId}`;
+
+  return (await apiClient.get(url)) as AxiosResponse<ICategoryResponse>;
+}
+
+function mapItems(results: IResult[]) {
   return results.map(result => {
     const { id, title, price, thumbnail, condition, shipping, currency_id } = result;
     const mappedPrice = mapPrice(currency_id, price);
@@ -169,6 +194,11 @@ function mapPrice(currency: string, rawAmount: number) {
     decimals: decimals ? Number(decimals) : 0,
   };
 }
+
+const author: IAuthor = {
+  lastname: 'Gavela',
+  name: 'Valentín',
+};
 
 function handleErrorResponse(req: IRequest, res: IResponse, err: any) {
   const { method, body, params, url } = req;

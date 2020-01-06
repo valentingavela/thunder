@@ -60,6 +60,13 @@
 
   a {
     cursor: pointer;
+    color: inherit;
+    text-decoration: inherit;
+  }
+
+  h2 {
+    margin: 0;
+    padding: 0;
   }
 }
 
