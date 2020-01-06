@@ -9,13 +9,19 @@ export interface IAuthor {
 
 export interface ISearchResponse {
   author: IAuthor;
-  categories: string[];
+  categories: ICategory[];
   items: IProduct[];
+}
+
+export interface ICategory {
+  id: string;
+  name: string;
 }
 
 export interface IProduct {
   id: string;
   title: string;
+  categories: ICategory[];
   price: {
     currency: string;
     amount: number;
@@ -30,18 +36,5 @@ export interface IProduct {
 
 export interface ISearchItemResponse {
   author: IAuthor;
-  item: {
-    id: string;
-    title: string;
-    price: {
-      currency: string;
-      amount: number;
-      decimals: number;
-    };
-    picture: string;
-    condition: string;
-    free_shipping: boolean;
-    sold_quantity: number;
-    description: string;
-  };
+  item: IProduct;
 }
