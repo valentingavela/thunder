@@ -2,18 +2,19 @@ import React, { PureComponent } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { bind } from 'decko';
 import SearchServices from '@services/search.services';
-import { IProduct } from '@models/shopping';
+import { IProduct, ICategory } from '@models/shopping';
 import ProductCluster from '@components/ProductCluster';
 import Spinner from '@components/Spinner';
 import styles from './style.scss';
 import classNames from 'classnames';
 import { parse } from 'query-string';
 import ProductNotFound from '@components/ProductNotFound';
+import BreadCrumb from '@components/BreadCrumb';
 
 class ItemsView extends PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { products: [], loading: true };
+    this.state = { products: [], loading: true, categories: [] };
   }
 
   componentDidMount() {
@@ -36,18 +37,25 @@ class ItemsView extends PureComponent<Props, State> {
     this.setState({ loading: true });
     SearchServices.getProducts(productId).then(response => {
       const resultsFound = !!response.items && response.items.length > 0;
-      this.setState({ products: resultsFound ? response.items : [], loading: false });
+      this.setState({
+        products: resultsFound ? response.items : [],
+        loading: false,
+        categories: response.categories,
+      });
     });
   }
 
   render() {
-    const { loading, products } = this.state;
+    const { loading, products, categories } = this.state;
     return (
       <div className={classNames('d-flex', styles.itemsContainer)}>
         {loading ? (
           <Spinner size={'large'} />
         ) : (
           <div>
+            <div className="pb-3">
+              <BreadCrumb categories={categories} />
+            </div>
             {products.length === 0 ? (
               <ProductNotFound />
             ) : (
@@ -67,6 +75,7 @@ class ItemsView extends PureComponent<Props, State> {
 interface State {
   loading: boolean;
   products: IProduct[];
+  categories: ICategory[];
 }
 
 type Props = RouteComponentProps;
