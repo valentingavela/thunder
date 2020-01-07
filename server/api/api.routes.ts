@@ -1,10 +1,10 @@
 import express = require('express');
-import ApiController = require('./api.controller');
-import SetApiMiddleware = require('../middlewares/setApiClient.middleware');
+import { searchProducts } from './searchProducts.controllers';
+import { getItem } from './getItem.controller';
 
 const apiRouter = express.Router();
 
-apiRouter.get('/items/:id', SetApiMiddleware, ApiController.getItem);
-apiRouter.get('/items', SetApiMiddleware, ApiController.searchProducts);
+apiRouter.get('/items/:id', getItem);
+apiRouter.get('/items', searchProducts);
 
 export = apiRouter;
