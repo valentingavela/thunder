@@ -27,6 +27,7 @@ class SearchBox extends PureComponent<Props, State> {
         <input
           className={styles.input}
           onChange={this.handleInputChange}
+          defaultValue={this.props.initialValue}
           // TODO add translation in place of hardcoded text
           placeholder="Nunca dejes de buscar"
         />
@@ -40,6 +41,7 @@ class SearchBox extends PureComponent<Props, State> {
 
 interface Props {
   onSearchButtonClick: (payload: string) => void;
+  initialValue?: string;
 }
 
 interface State {
