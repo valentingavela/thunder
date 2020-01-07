@@ -1,5 +1,6 @@
 module.exports = {
   PROJECT_PATH: process.cwd(),
+  title: 'MercadoLibre',
   app: {
     base: '/',
   },
