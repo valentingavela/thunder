@@ -1,13 +1,19 @@
 import { IRequest, IResponse } from 'models/Express';
 
 export function getMostRepeatedElement(arr: any[], path: string) {
+  if (!arr) return;
+
   let mf = 1;
   let m = 0;
   let item;
 
   for (let i = 0; i < arr.length; i++) {
     for (let j = i; j < arr.length; j++) {
-      if (arr[i][path] === arr[j][path]) m++;
+      if (!!path) {
+        if (arr[i][path] === arr[j][path]) m++;
+      } else {
+        if (arr[i] === arr[j]) m++;
+      }
       if (mf < m) {
         mf = m;
         item = arr[i];
