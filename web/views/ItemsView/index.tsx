@@ -12,6 +12,8 @@ import ProductNotFound from '@components/ProductNotFound';
 import BreadCrumb from '@components/BreadCrumb';
 
 class ItemsView extends PureComponent<Props, State> {
+  searchHandler: any;
+
   constructor(props: Props) {
     super(props);
     this.state = { products: [], loading: true, categories: [] };
@@ -21,12 +23,16 @@ class ItemsView extends PureComponent<Props, State> {
     const { q } = parse(this.props.location.search);
     this.searchProducts(q as string);
 
-    this.searchOnUrlChange();
+    this.searchHandler = this.searchOnUrlChange();
+  }
+
+  componentWillUnmount() {
+    this.searchHandler();
   }
 
   @bind
   searchOnUrlChange() {
-    this.props.history.listen(location => {
+    return this.props.history.listen(location => {
       const { q } = parse(location.search);
       this.searchProducts(q as string);
     });
@@ -34,13 +40,14 @@ class ItemsView extends PureComponent<Props, State> {
 
   @bind
   searchProducts(productId: string) {
-    this.setState({ loading: true });
-    SearchServices.getProducts(productId).then(response => {
-      const resultsFound = !!response.items && response.items.length > 0;
-      this.setState({
-        products: resultsFound ? response.items : [],
-        loading: false,
-        categories: response.categories,
+    this.setState({ loading: true }, () => {
+      SearchServices.getProducts(productId).then(response => {
+        const resultsFound = !!response.items && response.items.length > 0;
+        this.setState({
+          products: resultsFound ? response.items : [],
+          loading: false,
+          categories: response.categories,
+        });
       });
     });
   }
