@@ -1,9 +1,13 @@
 import { IRequest, IResponse } from '../models/Express';
-import { ISearch, IResult, ISearchPayload, IAuthor } from './search.models';
+import { ISearch, IResult, ISearchPayload, IAuthor } from '../models/search.models';
 
 import { AxiosResponse } from 'axios';
-import { ISearchItemResponse, ISearchItemPayload, IGetDescriptionResponse } from './searchItem.models';
-import { ICategoryResponse, IPathFromRoot } from './category.models';
+import {
+  ISearchItemResponse,
+  ISearchItemPayload,
+  IGetDescriptionResponse,
+} from '../models/searchItem.models';
+import { ICategoryResponse, IPathFromRoot } from '../models/category.models';
 import { get2DArrayColumn, getMostRepeatedElement, mapPrice, handleErrorResponse } from '../utils/functions';
 import apiCli from '../services/apiClient.service';
 
