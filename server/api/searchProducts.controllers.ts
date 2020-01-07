@@ -2,11 +2,6 @@ import { IRequest, IResponse } from '../models/Express';
 import { ISearch, IResult, ISearchPayload, IAuthor } from '../models/search.models';
 
 import { AxiosResponse } from 'axios';
-import {
-  ISearchItemResponse,
-  ISearchItemPayload,
-  IGetDescriptionResponse,
-} from '../models/searchItem.models';
 import { ICategoryResponse, IPathFromRoot } from '../models/category.models';
 import { get2DArrayColumn, getMostRepeatedElement, mapPrice, handleErrorResponse } from '../utils/functions';
 import apiCli from '../services/apiClient.service';
@@ -88,7 +83,7 @@ function generateCategoryBreadcrumb(categories: ICategoryResponse[]) {
     if (times > 1) acc = [...acc, item];
 
     return acc;
-  }, []);
+  }, []) as string[];
 }
 
 function mapItems(results: IResult[]) {
