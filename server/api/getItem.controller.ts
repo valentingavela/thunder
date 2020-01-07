@@ -1,5 +1,5 @@
 import { IRequest, IResponse } from '../models/Express';
-import { ISearch, IResult, ISearchPayload, IAuthor } from '../models/search.models';
+import { IAuthor } from '../models/search.models';
 
 import { AxiosResponse } from 'axios';
 import {
@@ -7,8 +7,8 @@ import {
   ISearchItemPayload,
   IGetDescriptionResponse,
 } from '../models/searchItem.models';
-import { ICategoryResponse, IPathFromRoot } from '../models/category.models';
-import { get2DArrayColumn, getMostRepeatedElement, mapPrice, handleErrorResponse } from '../utils/functions';
+import { IPathFromRoot } from '../models/category.models';
+import { mapPrice, handleErrorResponse } from '../utils/functions';
 import apiCli from '../services/apiClient.service';
 
 const GetItemController = {
