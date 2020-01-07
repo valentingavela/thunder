@@ -1,8 +1,8 @@
-import { ISearch } from 'api/search.models';
+import { ISearch } from 'models/search.models';
 import config = require('config');
 import AxiosBaseClient = require('../client/index');
-import { ISearchItemResponse, IGetDescriptionResponse } from 'api/searchItem.models';
-import { ICategoryResponse } from 'api/category.models';
+import { ISearchItemResponse, IGetDescriptionResponse } from 'models/searchItem.models';
+import { ICategoryResponse } from 'models/category.models';
 
 const baseURL = config.get<string>('mercadoLibre.rest.host');
 
